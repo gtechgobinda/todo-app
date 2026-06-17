@@ -1,0 +1,133 @@
+.ai-assistant {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+}
+
+.ai-assistant__toggle {
+  width: 58px;
+  height: 58px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  border: 0;
+  border-radius: 50%;
+  background: #111827;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
+  cursor: pointer;
+}
+
+.ai-assistant__panel {
+  width: min(360px, calc(100vw - 32px));
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.ai-assistant__header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  background: #111827;
+}
+
+.ai-assistant__header h2 {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.ai-assistant__header p {
+  color: #d1d5db;
+  font-size: 0.8rem;
+}
+
+.ai-assistant__header button {
+  width: 32px;
+  height: 32px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+}
+
+.ai-assistant__messages {
+  height: 280px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.ai-assistant__message {
+  max-width: 85%;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  border-radius: 8px;
+}
+
+.ai-assistant__message--assistant {
+  align-self: flex-start;
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.ai-assistant__message--user {
+  align-self: flex-end;
+  color: #ffffff;
+  background: #2563eb;
+}
+
+.ai-assistant__form {
+  padding: 12px;
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ai-assistant__form input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  color: #111827;
+  font: inherit;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+}
+
+.ai-assistant__form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ai-assistant__form button {
+  padding: 0 14px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .ai-assistant {
+    right: 16px;
+    bottom: 16px;
+  }
+}

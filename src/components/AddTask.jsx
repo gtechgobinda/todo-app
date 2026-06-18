@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import api from '../api/axiosConfig'
 import './addTask.css'
 
-const AddTask = () => {
+const AddTask = ({ onTaskAdded }) => {
   const [task, setTask] = useState({
     title: '',
     description: '',
@@ -42,6 +42,7 @@ const AddTask = () => {
         description: '',
       })
       setStatus('Task added successfully.')
+      if (onTaskAdded) onTaskAdded()
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to add task. Please try again.')
     } finally {

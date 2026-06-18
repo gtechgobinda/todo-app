@@ -1,41 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import api from '../../api/axiosConfig'
 import './taskList.css'
 
-const TaskList = () => {
-  const [tasks, setTasks] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
+const TaskList = ({ tasks, setTasks, isLoading, error, onRefetch }) => {
   const [editingId, setEditingId] = useState('')
-  const [editTask, setEditTask] = useState({
-    title: '',
-    description: '',
-  })
+  const [editTask, setEditTask] = useState({ title: '', description: '' })
   const [actionError, setActionError] = useState('')
   const [actionMessage, setActionMessage] = useState('')
   const [activeTaskId, setActiveTaskId] = useState('')
-
-  useEffect(() => {
-    const getTasks = async () => {
-      try {
-        setIsLoading(true)
-        setError('')
-
-        const response = await api.get('/tasks')
-        const taskList = Array.isArray(response.data)
-          ? response.data
-          : response.data?.data || response.data?.tasks || []
-
-        setTasks(taskList)
-      } catch (err) {
-        setError(err.response?.data?.message || 'Unable to load tasks.')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getTasks()
-  }, [])
 
   const getTaskId = (task) => task._id || task.id
 
@@ -43,27 +15,17 @@ const TaskList = () => {
     setActionError('')
     setActionMessage('')
     setEditingId(getTaskId(task))
-    setEditTask({
-      title: task.title || '',
-      description: task.description || '',
-    })
+    setEditTask({ title: task.title || '', description: task.description || '' })
   }
 
   const cancelEdit = () => {
     setEditingId('')
-    setEditTask({
-      title: '',
-      description: '',
-    })
+    setEditTask({ title: '', description: '' })
   }
 
   const handleEditChange = (event) => {
     const { name, value } = event.target
-
-    setEditTask((prevTask) => ({
-      ...prevTask,
-      [name]: value,
-    }))
+    setEditTask((prev) => ({ ...prev, [name]: value }))
   }
 
   const updateTask = async (taskId) => {
@@ -77,7 +39,6 @@ const TaskList = () => {
 
     try {
       setActiveTaskId(taskId)
-
       const response = await api.put(`/tasks/${taskId}`, {
         title: editTask.title.trim(),
         description: editTask.description.trim(),
@@ -87,12 +48,7 @@ const TaskList = () => {
         title: editTask.title.trim(),
         description: editTask.description.trim(),
       }
-
-      setTasks((prevTasks) => (
-        prevTasks.map((task) => (
-          getTaskId(task) === taskId ? { ...task, ...updatedTask } : task
-        ))
-      ))
+      setTasks((prev) => prev.map((t) => getTaskId(t) === taskId ? { ...t, ...updatedTask } : t))
       setActionMessage('Task updated successfully.')
       cancelEdit()
     } catch (err) {
@@ -109,13 +65,9 @@ const TaskList = () => {
     try {
       setActiveTaskId(taskId)
       await api.delete(`/tasks/${taskId}`)
-
-      setTasks((prevTasks) => prevTasks.filter((task) => getTaskId(task) !== taskId))
+      setTasks((prev) => prev.filter((t) => getTaskId(t) !== taskId))
       setActionMessage('Task deleted successfully.')
-
-      if (editingId === taskId) {
-        cancelEdit()
-      }
+      if (editingId === taskId) cancelEdit()
     } catch (err) {
       setActionError(err.response?.data?.message || 'Unable to delete task.')
     } finally {
@@ -132,7 +84,6 @@ const TaskList = () => {
         </div>
 
         {isLoading && <p className="task-list__state">Loading tasks...</p>}
-
         {error && <p className="task-list__state task-list__state--error">{error}</p>}
         {actionMessage && <p className="task-list__state task-list__state--success">{actionMessage}</p>}
         {actionError && <p className="task-list__state task-list__state--error">{actionError}</p>}
@@ -156,7 +107,6 @@ const TaskList = () => {
                         onChange={handleEditChange}
                       />
                     </label>
-
                     <label>
                       <span>Description</span>
                       <textarea
@@ -166,7 +116,6 @@ const TaskList = () => {
                         rows="4"
                       />
                     </label>
-
                     <div className="task-list__actions">
                       <button
                         className="task-list__button task-list__button--primary"
@@ -187,7 +136,6 @@ const TaskList = () => {
                       <h2>{task.title}</h2>
                       <p>{task.description}</p>
                     </div>
-
                     <div className="task-list__actions">
                       <button className="task-list__button" type="button" onClick={() => startEdit(task)}>
                         Edit

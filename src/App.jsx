@@ -1,15 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import NavBar from './components/NavBar'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import AddTask from './components/AddTask'
 import TaskList from './components/TaskList/TaskList'
 import AIAssistant from './components/AIAssistant/AIAssistant'
+import Auth from './components/Auth/Auth'
 import api from './api/axiosConfig'
 
 const App = () => {
+  const [user, setUser] = useState(() => localStorage.getItem('userEmail'))
   const [tasks, setTasks] = useState([])
   const [tasksLoading, setTasksLoading] = useState(true)
   const [tasksError, setTasksError] = useState('')
+
+  const handleAuth = (email) => {
+    setUser(email)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userEmail')
+    setUser(null)
+    setTasks([])
+  }
 
   const fetchTasks = useCallback(async () => {
     try {
@@ -21,19 +34,31 @@ const App = () => {
         : response.data?.data || response.data?.tasks || []
       setTasks(taskList)
     } catch (err) {
-      setTasksError(err.response?.data?.message || 'Unable to load tasks.')
+      if (err.response?.status === 401) {
+        handleLogout()
+      } else {
+        setTasksError(err.response?.data?.message || 'Unable to load tasks.')
+      }
     } finally {
       setTasksLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    fetchTasks()
-  }, [fetchTasks])
+    if (user) {
+      fetchTasks()
+    } else {
+      setTasksLoading(false)
+    }
+  }, [user, fetchTasks])
+
+  if (!user) {
+    return <Auth onAuth={handleAuth} />
+  }
 
   return (
     <>
-      <NavBar />
+      <NavBar user={user} onLogout={handleLogout} />
       <Routes>
         <Route
           path='/'
@@ -48,6 +73,7 @@ const App = () => {
           }
         />
         <Route path='/add' element={<AddTask onTaskAdded={fetchTasks} />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
       <AIAssistant tasks={tasks} onRefetch={fetchTasks} />
     </>

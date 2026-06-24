@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import NavBar from './components/NavBar'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import AddTask from './components/AddTask'
-import TaskList from './components/TaskList/TaskList'
+import KanbanBoard from './components/KanbanBoard/KanbanBoard'
 import AIAssistant from './components/AIAssistant/AIAssistant'
 import Auth from './components/Auth/Auth'
 import api from './api/axiosConfig'
@@ -63,12 +63,11 @@ const App = () => {
         <Route
           path='/'
           element={
-            <TaskList
+            <KanbanBoard
               tasks={tasks}
               setTasks={setTasks}
               isLoading={tasksLoading}
               error={tasksError}
-              onRefetch={fetchTasks}
             />
           }
         />

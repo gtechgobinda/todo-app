@@ -7,7 +7,7 @@ const NavBar = ({ user, onLogout }) => {
     <nav className="navbar">
       <div className="navbar__brand">To Do App</div>
       <ul className="navbar__links">
-        <li><Link className="navbar__link" to="/">List</Link></li>
+        <li><Link className="navbar__link" to="/">Board</Link></li>
         <li><Link className="navbar__link navbar__link--primary" to="/add">Add Task</Link></li>
         {user && (
           <>
